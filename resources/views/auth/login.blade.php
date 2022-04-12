@@ -26,7 +26,7 @@
     <div class="row container-min-full-height">
         <div class="col-lg-8 p-3 login-left">
             <div class="w-50">
-                <h2 class="mb-4 text-center">Welcome back!</h2>
+                <h2 class="mb-4 text-center">Hoşgeldiniz</h2>
                 <form method="POST" action="{{ route('login') }}" class="text-center">
                     @csrf
                     <div class="form-group">

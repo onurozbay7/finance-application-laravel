@@ -29,6 +29,15 @@
 
     @endif
 
+    @if(session("statusDanger"))
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-12">
+                <div class="alert alert-danger">{{ session("statusDanger") }}</div>
+            </div>
+        </div>
+
+    @endif
+
     <div class="widget-list">
         <div class="row">
             <div class="col-md-12 widget-holder">
@@ -84,14 +93,14 @@
 
             let table =  $('#example').DataTable( {
                 lengthMenu: [[25, 100, -1], [25, 100, "All"]],
-                /*
+
                 dom: 'Blfrtip',
                 buttons: [
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ],
-                */
+
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 ajax: {
                     type:'POST',
                     headers: {'X-CSRF-TOKEN': '{{csrf_token()}}'},

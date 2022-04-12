@@ -4,6 +4,7 @@ namespace App\Http\Controllers\front\musteriler;
 
 use App\Helper\fileUpload;
 use App\Http\Controllers\Controller;
+use App\Models\Fatura;
 use App\Models\Musteriler;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -78,17 +79,24 @@ class indexController extends Controller
     public function delete($id)
     {
         $c = Musteriler::where('id',$id)->count();
-        if($c !=0){
-            $data = Musteriler::where('id',$id)->get();
-            fileUpload::deleteDirectory($data[0]['photo']);
-            Musteriler::where('id',$id)->delete();
-
-            return redirect()->back()->with('status','Müşteri Başarıyla Silindi');
+        $faturaC = Fatura::where('musteriId', $id)->count();
+        if($faturaC != 0){
+            return redirect()->back()->with('statusDanger','Müşterinin faturaları mevcut. Lütfen önce faturaları silin.');
         }
         else {
-            return redirect('/')->with('status','Müşteri Silinemedi');
+            if($c !=0){
+                $data = Musteriler::where('id',$id)->get();
+                fileUpload::deleteDirectory($data[0]['photo']);
+                Musteriler::where('id',$id)->delete();
+
+                return redirect()->back()->with('status','Müşteri Başarıyla Silindi');
+            }
+            else {
+                return redirect('/')->with('status','Müşteri Silinemedi');
+            }
         }
-    }
+        }
+
 
     public function data(Request $request){
         $table =Musteriler::query();

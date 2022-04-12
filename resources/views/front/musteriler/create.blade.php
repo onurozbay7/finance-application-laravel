@@ -25,7 +25,16 @@
             </div>
         </div>
 
-        @endif
+    @endif
+
+    @if(session("statusDanger"))
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-12">
+                <div class="alert alert-danger">{{ session("statusDanger") }}</div>
+            </div>
+        </div>
+
+    @endif
 
     <div class="widget-list">
         <div class="row">

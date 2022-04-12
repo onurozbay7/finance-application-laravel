@@ -10,6 +10,12 @@ class Kalem extends Model
     protected $guarded = [];
 
 
+    static function getList($type){
+        $list = Kalem::where('kalemTipi',$type)->get();
+        return $list;
+    }
+
+
     static function getKdv($id){
         $data = Kalem::where('id',$id)->get();
 

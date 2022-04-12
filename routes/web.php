@@ -48,4 +48,26 @@ Route::group(['namespace'=>'front','middleware'=>['auth']],function (){
         Route::post('/data', [App\Http\Controllers\front\kalem\indexController::class, 'data'])->name('data');
     });
 
+    Route::group(['namespace'=>'fatura','as'=>'fatura.', 'prefix'=>'fatura'], function (){
+
+        Route::get('/', [App\Http\Controllers\front\fatura\indexController::class, 'index'])->name('index');
+        Route::get('/olustur/{type}',[App\Http\Controllers\front\fatura\indexController::class, 'create'])->name('create');
+        Route::post('/olustur/{type}',[App\Http\Controllers\front\fatura\indexController::class, 'store'])->name('store');
+        Route::get('/duzenle/{id}',[App\Http\Controllers\front\fatura\indexController::class, 'edit'])->name('edit');
+        Route::post('/duzenle/{id}',[App\Http\Controllers\front\fatura\indexController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',[App\Http\Controllers\front\fatura\indexController::class, 'delete'])->name('delete');
+        Route::post('/data', [App\Http\Controllers\front\fatura\indexController::class, 'data'])->name('data');
+    });
+
+    Route::group(['namespace'=>'banka','as'=>'banka.', 'prefix'=>'banka'], function (){
+
+        Route::get('/', [App\Http\Controllers\front\banka\indexController::class, 'index'])->name('index');
+        Route::get('/olustur',[App\Http\Controllers\front\banka\indexController::class, 'create'])->name('create');
+        Route::post('/olustur',[App\Http\Controllers\front\banka\indexController::class, 'store'])->name('store');
+        Route::get('/duzenle/{id}',[App\Http\Controllers\front\banka\indexController::class, 'edit'])->name('edit');
+        Route::post('/duzenle/{id}',[App\Http\Controllers\front\banka\indexController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',[App\Http\Controllers\front\banka\indexController::class, 'delete'])->name('delete');
+        Route::post('/data', [App\Http\Controllers\front\banka\indexController::class, 'data'])->name('data');
+    });
+
 });

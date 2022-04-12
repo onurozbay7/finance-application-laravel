@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/demo/favicon.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/demo/teksoz-logo-collapse.png')}}">
     <link rel="stylesheet" href="{{asset('assets/css/pace.css')}}">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Default</title>
@@ -33,8 +33,8 @@
         <!-- Logo Area -->
         <div class="navbar-header">
             <a href="/" class="navbar-brand">
-                <img class="logo-expand" alt="" src="{{asset('assets/demo/logo-expand.png')}}">
-                <img class="logo-collapse" alt="" src="{{asset('assets/demo/logo-collapse.png')}}">
+                <img class="logo-expand" style="width: 80%;" alt="" src="{{asset('assets/demo/teksoz-logo.png')}}">
+                <img class="logo-collapse" style="width: 80%;" alt="" src="{{asset('assets/demo/teksoz-logo-collapse.png')}}">
                 <!-- <p>BonVue</p> -->
             </a>
         </div>
