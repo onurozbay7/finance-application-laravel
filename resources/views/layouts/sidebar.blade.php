@@ -63,10 +63,13 @@
             </a>
             <ul class="list-unstyled sub-menu">
                 <li>
-                    <a href="../default/page-profile.html">Ödeme Yap</a>
+                    <a href="{{ route('islem.index')}}">İşlem Listesi</a>
                 </li>
                 <li>
-                    <a href="../default/page-login.html">Tahsilat Al</a>
+                    <a href="{{ route('islem.create',['type'=>0]) }}">Ödeme Yap</a>
+                </li>
+                <li>
+                    <a href="{{ route('islem.create',['type'=>1]) }}">Tahsilat Al</a>
                 </li>
 
             </ul>

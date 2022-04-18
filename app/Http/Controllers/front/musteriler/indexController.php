@@ -6,6 +6,7 @@ use App\Helper\fileUpload;
 use App\Http\Controllers\Controller;
 use App\Models\Fatura;
 use App\Models\Musteriler;
+use App\Models\Rapor;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -102,10 +103,10 @@ class indexController extends Controller
         $table =Musteriler::query();
         $data = DataTables::of($table)
             ->addColumn('edit',function ($table){
-                return '<a href="'.route('musteriler.edit',['id'=>$table->id]).'">Düzenle</a>';
+                return '<a href="'.route('musteriler.edit',['id'=>$table->id]).'"><i class="feather feather-edit list-icon"></i></a>';
             })
             ->addColumn('delete',function ($table){
-                return '<a href="'.route('musteriler.delete',['id'=>$table->id]).'">Sil</a>';
+                return '<a href="'.route('musteriler.delete',['id'=>$table->id]).'"><i class="feather feather-trash-2 list-icon"></i></a>';
             })
             ->addColumn('publicname', function ($table){
                 return Musteriler::getPublicName($table->id);
@@ -125,7 +126,22 @@ class indexController extends Controller
             ->addColumn('adres', function ($table){
                 return Musteriler::getAdress($table->id);
             })
-            ->rawColumns(['edit','delete'])
+            ->addColumn('bakiye',function ($table){
+
+                $bakiye = Rapor::getMusteriBakiye($table->id);
+                if($bakiye < 0)
+                {
+                    return '<span style="color:red">'.$bakiye.'</span>';
+                }
+                elseif($bakiye > 0){
+                    return '<span style="color:green">+'.$bakiye.'</span>';
+                }
+                else
+                {
+                    return $bakiye;
+                }
+            })
+            ->rawColumns(['edit','delete','bakiye'])
             ->make(true);
         return $data;
     }

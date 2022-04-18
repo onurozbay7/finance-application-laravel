@@ -101,10 +101,10 @@ class indexController extends Controller
         $table = Banka::query();
         $data = DataTables::of($table)
             ->addColumn('edit', function ($table) {
-                return '<a href="' . route('banka.edit', ['id' => $table->id]) . '">Düzenle</a>';
+                return '<a href="' . route('banka.edit', ['id' => $table->id]) . '"><i class="feather feather-edit list-icon"></i></a>';
             })
             ->addColumn('delete', function ($table) {
-                return '<a href="' . route('banka.delete', ['id' => $table->id]) . '">Sil</a>';
+                return '<a href="' . route('banka.delete', ['id' => $table->id]) . '"><i class="feather feather-trash-2 list-icon"></i></a>';
             })
             ->rawColumns(['edit', 'delete'])
             ->make(true);

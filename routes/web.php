@@ -21,6 +21,13 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['namespace'=>'front','middleware'=>['auth']],function (){
 
+    Route::group(['namespace'=>'profil','as'=>'profil.', 'prefix'=>'profil'], function (){
+
+        Route::get('/',[App\Http\Controllers\front\profil\indexController::class, 'index'])->name('index');
+        Route::post('/',[App\Http\Controllers\front\profil\indexController::class, 'update'])->name('update');
+
+    });
+
     Route::group(['namespace'=>'home', 'as'=>'home.'],function (){
 
         Route::get('/',[App\Http\Controllers\front\home\indexController::class, 'index'])->name('index');
@@ -68,6 +75,17 @@ Route::group(['namespace'=>'front','middleware'=>['auth']],function (){
         Route::post('/duzenle/{id}',[App\Http\Controllers\front\banka\indexController::class, 'update'])->name('update');
         Route::get('/delete/{id}',[App\Http\Controllers\front\banka\indexController::class, 'delete'])->name('delete');
         Route::post('/data', [App\Http\Controllers\front\banka\indexController::class, 'data'])->name('data');
+    });
+
+    Route::group(['namespace'=>'islem','as'=>'islem.', 'prefix'=>'islem'], function (){
+
+        Route::get('/', [App\Http\Controllers\front\islem\indexController::class, 'index'])->name('index');
+        Route::get('/olustur/{type}',[App\Http\Controllers\front\islem\indexController::class, 'create'])->name('create');
+        Route::post('/olustur/{type}',[App\Http\Controllers\front\islem\indexController::class, 'store'])->name('store');
+        Route::get('/duzenle/{id}',[App\Http\Controllers\front\islem\indexController::class, 'edit'])->name('edit');
+        Route::post('/duzenle/{id}',[App\Http\Controllers\front\islem\indexController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',[App\Http\Controllers\front\islem\indexController::class, 'delete'])->name('delete');
+        Route::post('/data', [App\Http\Controllers\front\islem\indexController::class, 'data'])->name('data');
     });
 
 });

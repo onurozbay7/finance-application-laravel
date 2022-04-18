@@ -6,7 +6,10 @@ define('KALEM_GELIR',0);
 define('KALEM_GIDER',1);
 
 define('ISLEM_ODEME',0);
-define('ISLEMA_TAHSILAT',1);
+define('ISLEM_TAHSILAT',1);
+
+define('ODEME_NAKIT',0);
+define('ODEME_BANKA',1);
 return [
 
     /*
