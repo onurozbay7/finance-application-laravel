@@ -2,7 +2,7 @@
 @section('content')
     <div class="row page-title clearfix">
         <div class="page-title-left">
-            <h6 class="page-title-heading mr-0 mr-r-5">Müşteri Düzenle</h6>
+            <h6 class="page-title-heading mr-0 mr-r-5">Müşteri Düzenle <small> {{ \App\Models\Musteriler::getPublicName($data[0]['id']) }}</small></h6>
 
         </div>
         <!-- /.page-title-left -->
@@ -12,7 +12,8 @@
                 </li>
                 <li class="breadcrumb-item active">Müşteriler</li>
             </ol>
-            <div class="d-none d-md-inline-flex justify-center align-items-center"><a href="javascript: void(0);" class="btn btn-color-scheme btn-sm fs-11 fw-400 mr-l-40 pd-lr-10 mr-l-0-rtl mr-r-40-rtl hidden-xs hidden-sm ripple" target="_blank">{{ \App\Models\Musteriler::getPublicName($data[0]['id']) }}</a>
+            <div class="d-none d-md-inline-flex justify-center align-items-center d-print-none">
+                <a href="{{ route('musteriler.index') }}" class="btn btn-color-scheme btn-sm fs-11 fw-400 mr-l-40 pd-lr-10 mr-l-0-rtl mr-r-40-rtl hidden-xs hidden-sm ripple">Müşteri Listesi</a>
             </div>
         </div>
         <!-- /.page-title-right -->
@@ -86,7 +87,7 @@
 
                                 <div class="col-md-4 px-3">
                                     <label class=" col-form-label" for="l0">Vergi Dairesi</label>
-                                    <input class="form-control" name="vergiDairesi" type="text" value="{{ $data[0]['VergiDairesi'] }}">
+                                    <input class="form-control" name="vergiDairesi" type="text" value="{{ $data[0]['vergiDairesi'] }}">
                                 </div>
                             </div>
 

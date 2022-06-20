@@ -15,7 +15,17 @@
 
         </div>
         <!-- /.page-title-right -->
+
     </div>
+
+    @if(session("status"))
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-12">
+                <div class="alert alert-success">{{ session("status") }}</div>
+            </div>
+        </div>
+
+    @endif
     <!-- /.page-title -->
     <!-- =================================== -->
     <!-- Different data widgets ============ -->
@@ -63,7 +73,7 @@
                                     <!-- /.col-md-6 -->
                                     <div class="col-md-12">
                                         <div class="contact-details-cell"><small class="heading-font-family fw-500">Şifre</small>
-                                            <input type="text" name="password" class="form-control" value="">
+                                            <input type="text" name="password" placeholder="Değiştirmek istemiyorsanız lütfen boş bırakın." class="form-control" value="">
                                         </div>
                                         <!-- /.contact-details-cell -->
                                     </div>

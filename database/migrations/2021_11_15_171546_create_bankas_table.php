@@ -18,6 +18,7 @@ class CreateBankasTable extends Migration
             $table->string('ad');
             $table->string('iban')->nullable();
             $table->string('hesapNo')->nullable();
+            $table->double('bakiye')->nullable()->default(0);
 
             $table->timestamps();
         });

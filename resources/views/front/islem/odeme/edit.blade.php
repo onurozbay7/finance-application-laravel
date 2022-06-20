@@ -7,7 +7,7 @@
 @section('content')
     <div class="row page-title clearfix">
         <div class="page-title-left">
-            <h6 class="page-title-heading mr-0 mr-r-5">İşlem</h6>
+            <h6 class="page-title-heading mr-0 mr-r-5">İşlem <small> Ödeme Düzenle</small></h6>
 
         </div>
         <!-- /.page-title-left -->
@@ -17,7 +17,8 @@
                 </li>
                 <li class="breadcrumb-item active">İşlem</li>
             </ol>
-            <div class="d-none d-md-inline-flex justify-center align-items-center"><a href="javascript: void(0);" class="btn btn-color-scheme btn-sm fs-11 fw-400 mr-l-40 pd-lr-10 mr-l-0-rtl mr-r-40-rtl hidden-xs hidden-sm ripple" target="_blank">Ödeme Düzenle</a>
+            <div class="d-none d-md-inline-flex justify-center align-items-center">
+                <a href="{{ route('islem.index') }}" class="btn btn-color-scheme btn-sm fs-11 fw-400 mr-l-40 pd-lr-10 mr-l-0-rtl mr-r-40-rtl hidden-xs hidden-sm ripple">İşlem Listesi</a>
             </div>
         </div>
         <!-- /.page-title-right -->
@@ -48,7 +49,7 @@
                     <div class="widget-body clearfix">
 
 
-                        <form action="{{ route('islem.update',['id'=>$data[0]['id']]) }}" method="POST" enctype="multipart/form-data">
+                        <form id="form" action="{{ route('islem.update',['id'=>$data[0]['id']]) }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
 
@@ -57,18 +58,18 @@
 
 
                                 <div class="col-md-4 px-3">
-                                    <label class="col-form-label" for="l0">Fatura Seçiniz</label>
-                                    <select name="faturaId" id="faturaId" class="m-b-10 form-control fatura" data-placeholder="Fatura Seçiniz" data-toggle="select2">
-                                        <option value="">Fatura Seçiniz</option>
+                                    <label class="col-form-label" for="l0">Fiş Seçiniz</label>
+                                    <select required name="faturaId" id="faturaId" class="m-b-10 form-control fatura" data-placeholder="Fiş Seçiniz" data-toggle="select2">
+                                        <option value="">Fiş Seçiniz</option>
                                         @foreach(\App\Models\Fatura::getList(FATURA_GIDER) as $k => $v)
-                                            <option data-musteriId = "{{ $v['musteriId'] }}" @if($v['id'] == $data[0]['faturaId']) selected @endif value="{{ $v['id'] }}"> {{ $v['faturaNo']}} - {{ \App\Models\Musteriler::getPublicName($v['musteriId']) }} - {{ \App\Models\Fatura::getTotal($v['id']) }} TL</option>
+                                            <option data-fiyat = "{{ \App\Models\Fatura::getTotal($v['id']) }}" data-kalanFiyat ="{{ \App\Models\Fatura::getKalanTutarInt($v['id']) }}" data-musteriId = "{{ $v['musteriId'] }}" @if($v['id'] == $data[0]['faturaId']) selected @endif value="{{ $v['id'] }}"> {{ $v['faturaNo']}} - {{ \App\Models\Musteriler::getPublicName($v['musteriId']) }} - {{ \App\Models\Fatura::getTotal($v['id']) }} TL ({{ \App\Models\Fatura::getKalanTutar($v['id']) }} TL)</option>
                                         @endforeach
                                     </select>
                                 </div>
 
                                 <div class="col-md-4 px-3">
-                                    <label class="col-form-label" for="l0">Müşteri Seçiniz</label>
-                                    <select name="musteriId" id="musteriId" class="m-b-10 form-control musteri" data-placeholder="Müşteri Seçiniz" data-toggle="select2">
+                                    <label class="col-form-label" for="l0">Müşteri</label>
+                                    <select disabled name="musteriId" id="musteriId" class="m-b-10 form-control musteri" data-placeholder="Müşteri Seçiniz" data-toggle="select2">
                                         <option value="">Müşteri Seçiniz</option>
                                         @foreach(\App\Models\Musteriler::all() as $k => $v)
                                             <option @if($v['id'] == $data[0]['musteriId']) selected @endif value="{{$v['id']}}"> {{ \App\Models\Musteriler::getPublicName($v['id']) }}</option>
@@ -88,7 +89,6 @@
                                     <div class="form-group">
                                         <label class="col-form-label" for="l0">Hesap</label>
                                         <select name="hesap" class="m-b-10 form-control" data-placeholder="Hesap Seçiniz" data-toggle="select2">
-                                            <option @if($data[0]['hesap'] == 0) selected @endif value="0">Nakit</option>
                                             @foreach(\App\Models\Banka::all() as $k => $v)
                                                 <option @if($v['id'] == $data[0]['hesap']) selected @endif value="{{$v['id']}}"> {{ $v['ad'] }}</option>
                                             @endforeach
@@ -102,13 +102,15 @@
                                         <select name="odemeSekli" class="m-b-10 form-control" data-placeholder="Hesap Seçiniz" data-toggle="select2">
                                             <option @if($data[0]['odemeSekli'] == 0) selected @endif value="0">Nakit</option>
                                             <option @if($data[0]['odemeSekli'] == 1) selected @endif value="1">Banka</option>
+                                            <option @if($data[0]['odemeSekli'] == 2) selected @endif value="2">Kredi Kartı</option>
+                                            <option @if($data[0]['odemeSekli'] == 3) selected @endif value="3">Çek/Senet</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 px-3">
                                     <label class=" col-form-label" for="l0">Fiyat</label>
-                                    <input class="form-control" name="fiyat" type="text" value="{{ $data[0]['fiyat'] }}">
+                                    <input required class="form-control fiyat" name="fiyat" type="text" value="{{ $data[0]['fiyat'] }}">
                                 </div>
                             </div>
 
@@ -148,10 +150,19 @@
 
     <script>
         $(document).ready(function (){
+
+            $('[data-toggle=select2]').select2();
+
             $(".fatura").change(function (){
-                var museriId = $(this).find(":selected").attr('data-musteriId');
-                $(".musteri").val(museriId).trigger('change')
-            })
+                var musteriId = $(this).find(":selected").attr('data-musteriId');
+                var fiyat = $(this).find(":selected").attr('data-kalanFiyat');
+                $(".fiyat").val(fiyat);
+                $(".musteri").val(musteriId).trigger('change');
+            });
+
+            $('#form').on('submit', function() {
+                $('#musteriId').prop('disabled', false);
+            });
         });
     </script>
 

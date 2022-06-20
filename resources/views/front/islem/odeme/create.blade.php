@@ -7,7 +7,7 @@
 @section('content')
     <div class="row page-title clearfix">
         <div class="page-title-left">
-            <h6 class="page-title-heading mr-0 mr-r-5">İşlem</h6>
+            <h6 class="page-title-heading mr-0 mr-r-5">İşlem <small> Ödeme Yap</small> </h6>
 
         </div>
         <!-- /.page-title-left -->
@@ -17,7 +17,8 @@
                 </li>
                 <li class="breadcrumb-item active">İşlem</li>
             </ol>
-            <div class="d-none d-md-inline-flex justify-center align-items-center"><a href="javascript: void(0);" class="btn btn-color-scheme btn-sm fs-11 fw-400 mr-l-40 pd-lr-10 mr-l-0-rtl mr-r-40-rtl hidden-xs hidden-sm ripple" target="_blank">Yeni Ödeme Ekle</a>
+            <div class="d-none d-md-inline-flex justify-center align-items-center">
+                <a href="{{ route('islem.index') }}" class="btn btn-color-scheme btn-sm fs-11 fw-400 mr-l-40 pd-lr-10 mr-l-0-rtl mr-r-40-rtl hidden-xs hidden-sm ripple">İşlem Listesi</a>
             </div>
         </div>
         <!-- /.page-title-right -->
@@ -31,6 +32,7 @@
         </div>
 
     @endif
+
 
     @if(session("statusDanger"))
         <div class="row" style="margin-top: 10px;">
@@ -48,25 +50,27 @@
                     <div class="widget-body clearfix">
 
 
-                        <form action="{{ route('islem.store',['type'=>0]) }}" method="POST" enctype="multipart/form-data">
+                        <form id="form" action="{{ route('islem.store',['type'=>0]) }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
 
                             <div class="form-group row ">
 
                                 <div class="col-md-4 px-3">
-                                    <label class="col-form-label" for="l0">Fatura Seçiniz</label>
-                                    <select name="faturaId" id="faturaId" class="m-b-10 form-control fatura" data-placeholder="Fatura Seçiniz" data-toggle="select2">
-                                        <option value="">Fatura Seçiniz</option>
+                                    <label class="col-form-label" for="l0">FİŞ SEÇİNİZ</label>
+                                    <select required name="faturaId" id="faturaId" class="m-b-10 form-control fatura" data-placeholder="Fiş Seçiniz" data-toggle="select2">
+                                        <option value="">Fiş Seçiniz</option>
                                         @foreach(\App\Models\Fatura::getList(FATURA_GIDER) as $k => $v)
-                                            <option data-fiyat = "{{ \App\Models\Fatura::getTotal($v['id']) }}" data-musteriId = "{{ $v['musteriId'] }}" value="{{ $v['id'] }}"> {{ $v['faturaNo']}} - {{ \App\Models\Musteriler::getPublicName($v['musteriId']) }} - {{ \App\Models\Fatura::getTotal($v['id']) }} TL</option>
+                                            @if(\App\Models\Fatura::getKalanTutar($v['id']) > 0)
+                                            <option data-fiyat = "{{ \App\Models\Fatura::getTotal($v['id']) }}" data-kalanFiyat ="{{ \App\Models\Fatura::getKalanTutarInt($v['id']) }}" data-musteriId = "{{ $v['musteriId'] }}" value="{{ $v['id'] }}"> {{ $v['faturaNo']}} - {{ \App\Models\Musteriler::getPublicName($v['musteriId']) }} - {{ \App\Models\Fatura::getTotal($v['id']) }} TL ({{ \App\Models\Fatura::getKalanTutar($v['id']) }} TL)</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
 
                                 <div class="col-md-4 px-3">
-                                    <label class="col-form-label" for="l0">Müşteri Seçiniz</label>
-                                    <select name="musteriId" id="musteriId" class="m-b-10 form-control musteri" data-placeholder="Müşteri Seçiniz" data-toggle="select2">
+                                    <label class="col-form-label" for="l0">MÜŞTERİ</label>
+                                    <select disabled name="musteriId" id="musteriId" class="m-b-10 form-control musteri" data-placeholder="Müşteri Seçiniz" data-toggle="select2">
                                         <option value="">Müşteri Seçiniz</option>
                                         @foreach(\App\Models\Musteriler::all() as $k => $v)
                                             <option value="{{$v['id']}}"> {{ \App\Models\Musteriler::getPublicName($v['id']) }}</option>
@@ -76,7 +80,7 @@
 
 
                                 <div class="col-md-4 px-3">
-                                    <label class=" col-form-label" for="l0">İşlem Tarihi</label>
+                                    <label class=" col-form-label" for="l0">İŞLEM TARİHİ</label>
                                     <input class="form-control" required name="tarih" value="{{ date("Y-m-d") }}" type="date">
                                 </div>
 
@@ -85,9 +89,8 @@
                             <div class="row">
                                 <div class="col-md-4 px-3">
                                     <div class="form-group">
-                                        <label class="col-form-label" for="l0">Hesap</label>
+                                        <label class="col-form-label" for="l0">HESAP</label>
                                         <select name="hesap" class="m-b-10 form-control" data-placeholder="Hesap Seçiniz" data-toggle="select2">
-                                            <option value="0">Nakit</option>
                                             @foreach(\App\Models\Banka::all() as $k => $v)
                                                 <option value="{{$v['id']}}"> {{ $v['ad'] }}</option>
                                             @endforeach
@@ -97,23 +100,25 @@
 
                                 <div class="col-md-4 px-3">
                                     <div class="form-group">
-                                        <label class="col-form-label" for="l0">Ödeme Şekli</label>
+                                        <label class="col-form-label" for="l0">ÖDEME ŞEKLİ</label>
                                         <select name="odemeSekli" class="m-b-10 form-control" data-placeholder="Hesap Seçiniz" data-toggle="select2">
                                             <option value="0">Nakit</option>
-                                            <option value="1">Banka</option>
+                                            <option value="1">Banka(EFT/Havale)</option>
+                                            <option value="2">Kredi Kartı</option>
+                                            <option value="3">Çek/Senet</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 px-3">
-                                    <label class=" col-form-label" for="l0">Fiyat</label>
-                                    <input class="form-control fiyat" name="fiyat" type="text">
+                                    <label class=" col-form-label" for="l0">FİYAT</label>
+                                    <input required class="form-control fiyat" id="fiyat" name="fiyat" type="text">
                                 </div>
                             </div>
 
                             <div class="col-md-12 px-3">
                                 <div class="form-group">
-                                    <label class=" col-form-label" for="l0">Açıklama</label>
+                                    <label class=" col-form-label" for="l0">AÇIKLAMA</label>
                                     <textarea name="text" class="form-control" id="" cols="30" rows="5"></textarea>
                                 </div>
                             </div>
@@ -146,37 +151,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/multi-select/0.9.12/js/jquery.multi-select.min.js"></script>
 
     <script>
+        var pathname = window.location.pathname
+        pathname = pathname.split('/');
+        var faturaId = pathname[4];
+        if(pathname.length == 5) {
+            $("#faturaId").val(faturaId);
+            var fiyat2 = $('#faturaId').find(":selected").attr('data-kalanFiyat');
+            var musteriId2 = $('#faturaId').find(":selected").attr('data-musteriId');
+            $(".musteri").val(musteriId2).trigger('change');
+            $(".fiyat").val(fiyat2);
+        }
 
         $(document).ready(function (){
+
+            $('[data-toggle=select2]').select2();
+
             $(".fatura").change(function (){
-                var fiyat = $(this).find(":selected").attr('data-fiyat');
-                var museriId = $(this).find(":selected").attr('data-musteriId');
-                $(".musteri").val(museriId).trigger('change');
+                var fiyat = $(this).find(":selected").attr('data-kalanFiyat');
+                var musteriId = $(this).find(":selected").attr('data-musteriId');
+                $(".musteri").val(musteriId).trigger('change');
                 $(".fiyat").val(fiyat);
             });
-        });
-      /*  let ajaxUrl = "{{ route('islem.create',['type' => 0]) }}";
-        $("body").on("change","#musteriId", function (){
 
-            var musteriId = $('#musteriId').val();
-
-            var option = "";
-
-            $.ajax({
-                type: 'POST',
-                url: 'ajaxUrl',
-                data: {
-                    type: 1,
-                    musteriId: musteriId,
-                },
-                success:
-                function (){
-
-
-                    $('#faturaId').append(option);
-                }
+            $('#form').on('submit', function() {
+                $('#musteriId').prop('disabled', false);
             });
-        });*/
+
+        });
+
+
+
     </script>
 
 @endsection

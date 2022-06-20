@@ -5,13 +5,24 @@ namespace App\Http\Controllers\front\musteriler;
 use App\Helper\fileUpload;
 use App\Http\Controllers\Controller;
 use App\Models\Fatura;
+use App\Models\FaturaIslem;
+use App\Models\Islem;
+use App\Models\Logger;
 use App\Models\Musteriler;
 use App\Models\Rapor;
+use App\Models\UserPermission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\DataTables;
 
 class indexController extends Controller
 {
+
+    public function __construct() {
+
+    }
+
     public function index()
     {
         return view('front.musteriler.index');
@@ -25,12 +36,24 @@ class indexController extends Controller
 
     public function store(Request $request)
     {
+
         $all = $request->except('_token');
         $all['photo'] = fileUpload::newUpload(rand(1,9000),'musteriler',$request->file('photo'),0);
 
-        $create = Musteriler::create($all);
+
+            $create = Musteriler::create($all);
+
+
+
         if($create)
         {
+            if($all['musteriTipi'] == 0){
+                Logger::Insert($all['ad']." Müşterisi Eklendi","Müşteri");
+            }
+            else {
+                Logger::Insert($all['firmaAdi']." Müşterisi Eklendi","Müşteri");
+            }
+
             return redirect()->back()->with('status','Müşteri Ekleme İşlemi Başarılı');
 
         }
@@ -44,15 +67,18 @@ class indexController extends Controller
 
     public function edit($id)
     {
-        $c = Musteriler::where('id',$id)->count();
-        if($c !=0){
-            $data = Musteriler::where('id',$id)->get();
-            return view('front.musteriler.edit',['data'=>$data]);
+        if(!UserPermission::getMyControl(6)) {
+            Redirect::to('/')->with('statusDanger','Talep reddedildi. Erişim iznine sahip değilsiniz.')->send();
         }
         else {
-            return redirect('/');
+            $c = Musteriler::where('id', $id)->count();
+            if ($c != 0) {
+                $data = Musteriler::where('id', $id)->get();
+                return view('front.musteriler.edit', ['data' => $data]);
+            } else {
+                return redirect('/');
+            }
         }
-
     }
 
     public function update(Request $request)
@@ -67,6 +93,7 @@ class indexController extends Controller
             $update = Musteriler::where('id',$id)->update($all);
             if($update)
             {
+                Logger::Insert(Musteriler::getPublicName($id)." Müşterisi Düzenlendi","Müşteri");
                 return redirect()->back()->with('status','Müşteri Başarıyla Güncellendi');
             }
             else {
@@ -79,21 +106,25 @@ class indexController extends Controller
 
     public function delete($id)
     {
-        $c = Musteriler::where('id',$id)->count();
-        $faturaC = Fatura::where('musteriId', $id)->count();
-        if($faturaC != 0){
-            return redirect()->back()->with('statusDanger','Müşterinin faturaları mevcut. Lütfen önce faturaları silin.');
+        if(!UserPermission::getMyControl(7)) {
+            Redirect::to('/')->with('statusDanger','Talep reddedildi. Erişim iznine sahip değilsiniz.')->send();
         }
         else {
-            if($c !=0){
-                $data = Musteriler::where('id',$id)->get();
-                fileUpload::deleteDirectory($data[0]['photo']);
-                Musteriler::where('id',$id)->delete();
+            $c = Musteriler::where('id', $id)->count();
+            $faturaC = Fatura::where('musteriId', $id)->count();
+            if ($faturaC != 0) {
+                return redirect()->back()->with('statusDanger', 'Müşterinin fişleri mevcut. Lütfen önce fişleri silin.');
+            } else {
+                if ($c != 0) {
+                    $data = Musteriler::where('id', $id)->get();
+                    Logger::Insert(Musteriler::getPublicName($data[0]['id']) . " Müşterisi Silindi", "Müşteri");
+                    fileUpload::deleteDirectory($data[0]['photo']);
+                    Musteriler::where('id', $id)->delete();
 
-                return redirect()->back()->with('status','Müşteri Başarıyla Silindi');
-            }
-            else {
-                return redirect('/')->with('status','Müşteri Silinemedi');
+                    return redirect()->back()->with('status', 'Müşteri Başarıyla Silindi');
+                } else {
+                    return redirect('/')->with('status', 'Müşteri Silinemedi');
+                }
             }
         }
         }
@@ -103,13 +134,18 @@ class indexController extends Controller
         $table =Musteriler::query();
         $data = DataTables::of($table)
             ->addColumn('edit',function ($table){
-                return '<a href="'.route('musteriler.edit',['id'=>$table->id]).'"><i class="feather feather-edit list-icon"></i></a>';
+                return '<a href="'.route('musteriler.edit',['id'=>$table->id]).'"><i title="Düzenle" style="color:darkgreen" class="feather feather-edit list-icon d-print-none"></i></a>';
             })
             ->addColumn('delete',function ($table){
-                return '<a href="'.route('musteriler.delete',['id'=>$table->id]).'"><i class="feather feather-trash-2 list-icon"></i></a>';
+                return '<a class="deleteButton" href="'.route('musteriler.delete',['id'=>$table->id]).'"><i title="Sil" style="color:darkred" class="feather feather-trash-2 list-icon d-print-none"></i></a>';
             })
             ->addColumn('publicname', function ($table){
-                return Musteriler::getPublicName($table->id);
+                if($table->musteriTipi == 0){
+                    return $table->ad." ".$table->soyad;
+                }
+                else {
+                    return $table->firmaAdi;
+                }
             })
             ->editColumn('musteriTipi', function ($table){
                 if($table->musteriTipi ==0){
@@ -117,32 +153,61 @@ class indexController extends Controller
                 }
                 else{ return "Kurumsal"; }
             })
-            ->addColumn('telefon', function ($table){
-                return Musteriler::getPhoneNumber($table->id);
-            })
-            ->addColumn('email', function ($table){
-                return Musteriler::getEmail($table->id);
-            })
-            ->addColumn('adres', function ($table){
-                return Musteriler::getAdress($table->id);
-            })
             ->addColumn('bakiye',function ($table){
 
                 $bakiye = Rapor::getMusteriBakiye($table->id);
                 if($bakiye < 0)
                 {
-                    return '<span style="color:red">'.$bakiye.'</span>';
+                    return '<a href="'.route('islem.create',['type'=>1]).'" style="color:#c51919">'.$bakiye*(-1).' Borçlu</a>';
                 }
                 elseif($bakiye > 0){
-                    return '<span style="color:green">+'.$bakiye.'</span>';
+                    return '<a href="'.route('islem.create',['type'=>0]).'" style="color:#039f03">'.$bakiye.' Alacaklı</a>';
                 }
                 else
                 {
-                    return $bakiye;
+                    return '<i title="Borcu/Alacağı Yok" class="feather feather-check list-icon d-print-none"></i>';
                 }
+                return 0;
             })
-            ->rawColumns(['edit','delete','bakiye'])
+            ->addColumn('cari',function ($table){
+                return '<a href="'.route('musteriler.cari',['id'=>$table->id]).'"><i title="Müşteri Cari Hareketleri" style="color:darkblue" class="feather feather-file list-icon d-print-none"></i></a>';
+            })
+            ->rawColumns(['edit','delete','bakiye','cari'])
             ->make(true);
         return $data;
     }
+
+    public function cari($id){
+        $c = Musteriler::where('id',$id)->count();
+        if($c!=0)
+        {
+            $data = Musteriler::where('id',$id)->get();
+
+
+            $faturaTablo = FaturaIslem::leftJoin('faturas','fatura_islems.faturaId','=','faturas.id')
+                ->where('faturas.musteriId',$id)
+                ->groupBy('faturas.id')
+                ->orderBy('faturas.faturaTarih','desc')
+                ->select(['faturas.id as id','faturas.faturaTipi as type',DB::raw('"fatura" as uType'),DB::raw('SUM(genelToplam) as fiyat'),'faturas.faturaTarih as tarih']);
+
+
+            $islemTablo = Islem::where('musteriId',$id)
+                ->orderBy('tarih','desc')
+                ->select(['id','tip as type',DB::raw('"islem" as uType'),'fiyat','tarih']);
+
+
+
+            $viewData = $faturaTablo->union($islemTablo)
+                ->orderBy('tarih','asc')
+                ->get();
+
+
+            return view('front.musteriler.cari',['data'=>$data,'viewData'=>$viewData]);
+        }
+        else
+        {
+            return redirect('/');
+        }
+    }
+
 }

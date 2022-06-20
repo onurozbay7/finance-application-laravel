@@ -15,6 +15,11 @@ body:after {
   z-index: 99;
   background: #fff; }
 
+.dt-print-view:after {
+    content: normal !important;
+}
+
+
 body.pace-done:after {
   display: none; }
 

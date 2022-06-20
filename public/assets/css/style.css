@@ -10906,7 +10906,7 @@ body.rtl .dropdown-menu {
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075); }
 
-/* Hover Helper 
+/* Hover Helper
 ========================*/
 .hover-item {
   display: none; }
@@ -10920,7 +10920,7 @@ body.rtl .dropdown-menu {
 .hover-parent:hover .hover-item {
   display: block; }
 
-/* Title Seperator 
+/* Title Seperator
 ========================*/
 .title-seperator {
   display: -webkit-box;
@@ -10943,7 +10943,7 @@ body.rtl .dropdown-menu {
     border-top: 1px solid #eef1f2;
     display: block; }
 
-/* Icons 
+/* Icons
 ========================*/
 [class*='size-icon'] {
   display: -webkit-box;
@@ -10988,7 +10988,7 @@ body.rtl .dropdown-menu {
   height: 5.625rem;
   width: 5.625rem; }
 
-/* Star Ratings 
+/* Star Ratings
 ========================*/
 .star-ratings {
   position: relative;
@@ -11025,7 +11025,7 @@ body.rtl .dropdown-menu {
     .star-ratings.style-2 span::before {
       color: #ffcc02; }
 
-/* Featured Figure Tag 
+/* Featured Figure Tag
 ========================*/
 figure {
   position: relative; }
@@ -11034,7 +11034,7 @@ figure {
     top: 1em;
     left: -0.5em; }
 
-/* Scrollbar Styling for RTL 
+/* Scrollbar Styling for RTL
 ========================*/
 body.rtl .scrollbar-enabled {
   direction: ltr; }
@@ -13192,7 +13192,7 @@ a.bg-gray-900-contrast:hover {
 .letter-spacing-plus {
   letter-spacing: 0.05em; }
 
-/* Text Helpers 
+/* Text Helpers
 ========================*/
 .text-underline {
   text-decoration: underline; }
@@ -14656,7 +14656,7 @@ body.rtl .mr-lr-90-rtl,
 .mr-lr-90 {
   margin-right: 5.625rem !important; }
 
-/* RTL Margin Helpers 
+/* RTL Margin Helpers
 =========================*/
 body.rtl .ml-0-rtl, body.rtl .mx-0-rtl, body.rtl .m-0-rtl {
   margin-left: 0 !important; }
@@ -14742,7 +14742,7 @@ body.rtl .mt-auto-rtl {
 body.rtl .mb-auto-rtl {
   margin-bottom: auto !important; }
 
-/* RTL Padding Helpers 
+/* RTL Padding Helpers
 =========================*/
 body.rtl .pl-0-rtl, body.rtl .px-0-rtl, body.rtl .p-0-rtl {
   padding-left: 0 !important; }
@@ -14816,7 +14816,7 @@ body.rtl .pt-5-rtl, body.rtl .py-5-rtl, body.rtl .p-5-rtl {
 body.rtl .pb-5-rtl, body.rtl .py-5-rtl, body.rtl .p-5-rtl {
   padding-bottom: 3rem !important; }
 
-/* Float RTL Helpers 
+/* Float RTL Helpers
 =========================*/
 body.rtl .float-right-rtl {
   float: right !important; }
@@ -14857,7 +14857,7 @@ body.rtl .float-xl-right-rtl {
 body.rtl .float-xl-left-rtl {
   float: left !important; }
 
-/* Width Helpers 
+/* Width Helpers
 =========================*/
 .w-10 {
   width: 10% !important; }
@@ -22551,7 +22551,7 @@ Light Box Gallery
   -webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
           box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2); }
 
-/* Project Index 
+/* Project Index
 ============================*/
 .widget-project-index .card {
   border: 0; }
@@ -23812,7 +23812,7 @@ To Do App
 Kanban
  *********************************
  *********************************/
-/* Kanban Widget 
+/* Kanban Widget
 ========================*/
 .kanban-widget {
   overflow-x: auto; }

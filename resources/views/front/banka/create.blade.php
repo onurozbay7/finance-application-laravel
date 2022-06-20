@@ -2,7 +2,8 @@
 @section('content')
     <div class="row page-title clearfix">
         <div class="page-title-left">
-            <h6 class="page-title-heading mr-0 mr-r-5">Banka</h6>
+            <h6 class="page-title-heading mr-0 mr-r-5">Banka <small> Banka Ekle</small></h6>
+
 
         </div>
         <!-- /.page-title-left -->
@@ -12,7 +13,8 @@
                 </li>
                 <li class="breadcrumb-item active">Banka</li>
             </ol>
-            <div class="d-none d-md-inline-flex justify-center align-items-center"><a href="javascript: void(0);" class="btn btn-color-scheme btn-sm fs-11 fw-400 mr-l-40 pd-lr-10 mr-l-0-rtl mr-r-40-rtl hidden-xs hidden-sm ripple" target="_blank">Yeni Banka Ekle</a>
+            <div class="d-none d-md-inline-flex justify-center align-items-center">
+                <a href="{{ route('banka.index') }}" class="btn btn-color-scheme btn-sm fs-11 fw-400 mr-l-40 pd-lr-10 mr-l-0-rtl mr-r-40-rtl hidden-xs hidden-sm ripple">Banka Listesi</a>
             </div>
         </div>
         <!-- /.page-title-right -->
@@ -50,19 +52,23 @@
 
 
                             <div class="form-group row firma--area">
-                                <div class="col-md-4 px-3">
+                                <div class="col-md-6 px-3">
                                     <label class=" col-form-label" for="l0">Banka Adı</label>
                                     <input class="form-control" required name="ad" type="text">
                                 </div>
 
-                                <div class="col-md-4 px-3">
+                                <div class="col-md-6 px-3">
                                     <label class="col-form-label" for="l0">Iban</label>
                                     <input class="form-control" required value="TR" name="iban" type="text">
                                 </div>
 
-                                <div class="col-md-4 px-3">
+                                <div class="col-md-6 px-3">
                                     <label class="col-form-label" for="l0">Hesap Numarası</label>
                                     <input class="form-control" required name="hesapNo" type="text">
+                                </div>
+                                <div class="col-md-6 px-3">
+                                    <label class=" col-form-label" for="l0">Bakiye</label>
+                                    <input required class="form-control bakiye" id="bakiye" value="0" name="bakiye" type="text">
                                 </div>
 
                             </div>

@@ -26,6 +26,6 @@ class indexController extends Controller
         $data = User::where('id',Auth::id())->get();
         $all['photo'] = fileUpload::changeUpload(rand(1,9000),"profil",$request->file('photo'),0,$data,"photo");
         $update = User::where('id',Auth::id())->update($all);
-        return redirect()->back();
+        return redirect()->back()->with('status',"Profiliniz Başarıyla Güncellendi");
     }
 }

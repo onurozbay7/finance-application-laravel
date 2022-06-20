@@ -20,6 +20,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css" rel="stylesheet" type="text/css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.25/daterangepicker.min.css" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/css/style.css')}}" rel="stylesheet" type="text/css">
+    <style>
+        #example_filter input {
+            border-radius: 5px;
+            border-color: #0dace3;
+
+        }
+
+    </style>
     <!-- Head Libs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
     <script data-pace-options='{ "ajax": false, "selectors": [ "img" ]}' src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
@@ -29,9 +37,9 @@
 <body class="header-dark sidebar-light sidebar-expand">
 <div id="wrapper" class="wrapper">
     <!-- HEADER & TOP NAVIGATION -->
-    <nav class="navbar">
+    <nav class="navbar d-print-none">
         <!-- Logo Area -->
-        <div class="navbar-header">
+        <div class="navbar-header ">
             <a href="/" class="navbar-brand">
                 <img class="logo-expand" style="width: 80%;" alt="" src="{{asset('assets/demo/teksoz-logo.png')}}">
                 <img class="logo-collapse" style="width: 80%;" alt="" src="{{asset('assets/demo/teksoz-logo-collapse.png')}}">
@@ -51,8 +59,8 @@
         <!-- Button: Create New -->
         <div class="btn-list dropdown d-none d-md-flex mr-4 mr-0-rtl ml-4-rtl"><a href="javascript:void(0);" class="btn btn-primary dropdown-toggle ripple" data-toggle="dropdown"><i class="feather feather-plus list-icon"></i> Oluştur</a>
             <div class="dropdown-menu dropdown-left animated flipInY"><span class="dropdown-header">Yeni Bir ...</span>
-                <a class="dropdown-item" href="{{ route('fatura.create',['type' => FATURA_GELIR]) }}">Gelir Faturası</a>
-                <a class="dropdown-item" href="{{ route('fatura.create',['type' => FATURA_GIDER]) }}">Gider Faturası</a>
+                <a class="dropdown-item" href="{{ route('fis.create',['type' => FATURA_GELIR]) }}">Gelir Fişi</a>
+                <a class="dropdown-item" href="{{ route('fis.create',['type' => FATURA_GIDER]) }}">Gider Fişi</a>
                 <a class="dropdown-item" href="{{ route('islem.create',['type' => ISLEM_ODEME]) }}">Ödeme Yap</a>
                 <a class="dropdown-item" href="{{ route('islem.create',['type' => ISLEM_TAHSILAT]) }}">Tahsilat Al</a>
             </div>
@@ -61,20 +69,25 @@
         <!-- User Image with Dropdown -->
         <ul class="nav navbar-nav">
             <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle ripple" data-toggle="dropdown"><span class="avatar thumb-xs2"><img src="{{ asset(\App\Models\User::getPhoto()) }}" class="rounded-circle" alt=""> <i class="feather feather-chevron-down list-icon"></i></span></a>
-                <div
-                    class="dropdown-menu dropdown-left dropdown-card dropdown-card-profile animated flipInY">
+                <div class="dropdown-menu dropdown-left dropdown-card dropdown-card-profile animated flipInY">
                     <div class="card">
-                        <header class="card-header d-flex mb-0"><a href="javascript:void(0);" class="col-md-4 text-center"><i class="feather feather-user-plus align-middle"></i> </a><a href="javascript:void(0);" class="col-md-4 text-center"><i class="feather feather-settings align-middle"></i> </a>
-                            <a
-                                href="javascript:void(0);" class="col-md-4 text-center"><i class="feather feather-power align-middle"></i>
-                            </a>
+                        <header class="card-header d-flex mb-0">
+                            @if(\App\Models\UserPermission::getMyControl(5))
+                            <a href="{{ route('user.create') }}" title="Kullanıcı Ekle" class="col-md-4 text-center"><i class="feather feather-user-plus align-middle"></i></a>
+                            <a href="{{ route('user.index') }}" title="Kullanıcı Listesi" class="col-md-4 text-center"><i class="feather feather-users align-middle"></i> </a>
+                            <a href="{{ route('logger.index') }}" title="Hareket Listesi" class="col-md-4 text-center"><i class="feather feather-clipboard align-middle"></i> </a>
+                            @else
+                                <a href="{{ route('logger.index') }}" title="Hareket Listesi" class="col-md-12 text-center"><i class="feather feather-clipboard align-middle"></i> </a>
+
+                            @endif
                         </header>
                         <ul class="list-unstyled card-body">
                             <li>
                                 <a href="{{ route('profil.index') }}"><span><span class="align-middle">Profil Düzenle</span></span></a>
                             </li>
                             <li>
-                                <a href="#"><span><span class="align-middle">Çıkış</span></span></a>
+                                <a href="{{ route('logout') }}" id="cikisButonu"><span><span class="align-middle">Çıkış</span></span></a>
+                                <form id="logout-form" action="{{route('logout')}}" method="POST"><input type="hidden" name="_token" value="{{csrf_token()}}"></form>
                             </li>
                         </ul>
                     </div>
@@ -84,12 +97,12 @@
         <!-- /.navbar-right -->
         <!-- Right Menu -->
         <ul class="nav navbar-nav d-none d-lg-flex  mr-4 ml-2 ml-0-rtl">
-            <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle ripple" data-toggle="dropdown"><i class="feather feather-file-plus list-icon"></i></a>
+            <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle ripple" data-toggle="dropdown"><i class="feather feather-bell list-icon"></i></a>
                 <div class="dropdown-menu dropdown-left dropdown-card animated flipInY">
                     <div class="card">
                         <header class="card-header d-flex align-items-center mb-0"> <span class="heading-font-family flex-1 text-center fw-400">BİLDİRİMLER</span>
                         </header>
-                        <ul class="card-body list-unstyled dropdown-list-group">
+                        <ul style="max-height: 480px;" class="card-body list-unstyled dropdown-list-group">
                             @if(count(\App\Models\Reminder::FaturaHatirlatici()) != 0)
                                 @foreach(\App\Models\Reminder::FaturaHatirlatici() as $k => $v)
                                     <li>
@@ -97,7 +110,7 @@
                                             <span class="media-body">
                                                 <span class="heading-font-family media-heading">{{ $v['name'] }} </span>
                                                 <br>
-                                                <span class="media-content"> {{ \App\Models\Musteriler::getPublicName($v['musteriId']) }} -> {{ $v['fiyat'] }} TL</span>
+                                                <span class="media-content">Tutar: {{ $v['fiyat'] }} -> Kalan Tutar: {{ $v['kalanTutar'] }}</span>
                                             </span>
 
                                         </a>
@@ -158,7 +171,7 @@
     </div>
     <!-- /.content-wrapper -->
     <!-- FOOTER -->
-    <footer class="footer"><span class="heading-font-family">Copyright @ 2017. All rights reserved BonVue Admin by Unifato</span>
+    <footer class="footer d-print-none"><span class="heading-font-family">Copyright @2021. All rights reserved creator of the Teksoz Finans, Ozzie</span>
     </footer>
 </div>
 <!--/ #wrapper -->
@@ -180,6 +193,18 @@
 <script src="{{asset('assets/vendors/theme-widgets/widgets.js')}}"></script>
 <script src="{{asset('assets/js/theme.js')}}"></script>
 <script src="{{asset('assets/js/custom.js')}}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert2.all.min.js"></script>
+
+<script>
+    (function() {
+        const checkBox = document.querySelector("#cikisButonu");
+        checkBox.addEventListener('click', (event) => {
+            event.preventDefault();
+            document.getElementById('logout-form').submit();
+        }, false);
+    })();
+</script>
 @yield('footer')
 </body>
 

@@ -18,7 +18,7 @@ class Rapor extends Model
     static function getMusteriOdeme($id)
     {
         // müşteriye göre , bize göre
-        //  - , +
+        //  + , -
         $fatura = FaturaIslem::leftJoin('faturas','fatura_islems.faturaId','=','faturas.id')
             ->where('faturas.musteriId',$id)
             ->where('faturas.faturaTipi',FATURA_GIDER)
@@ -31,7 +31,7 @@ class Rapor extends Model
     static function getMusteriTahsilat($id)
     {
         // müşteriye göre , bize göre
-        //  + , -
+        //  - , +
         $fatura = FaturaIslem::leftJoin('faturas','fatura_islems.faturaId','=','faturas.id')
             ->where('faturas.musteriId',$id)
             ->where('faturas.faturaTipi',FATURA_GELIR)
@@ -45,4 +45,6 @@ class Rapor extends Model
     {
         return   self::getMusteriOdeme($id) - self::getMusteriTahsilat($id);
     }
+
+
 }

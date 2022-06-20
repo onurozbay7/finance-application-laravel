@@ -10,7 +10,33 @@ define('ISLEM_TAHSILAT',1);
 
 define('ODEME_NAKIT',0);
 define('ODEME_BANKA',1);
+define('ODEME_KREDİ',2);
+define('ODEME_CEKSENET',3);
+
+define('ISLEM_AVANS',0);
+define('ISLEM_MAAS',1);
+
+
+
+
 return [
+    'permissions'=>[
+        'musteriler', // 0
+        'fatura', // 1
+        'urun', // 2
+        'banka', // 3
+        'islem', // 4
+        'user', // 5
+        'Düzenle', // 6
+        'Sil', // 7
+        'personel', // 8
+        'personelIslem', // 9
+        'takvim', // 10
+        'notlar', // 11
+        'kapi', // 12
+        'kapak' // 13
+
+    ],
 
     /*
     |--------------------------------------------------------------------------

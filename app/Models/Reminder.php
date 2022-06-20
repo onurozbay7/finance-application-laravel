@@ -20,22 +20,23 @@ class Reminder extends Model
                 {
                     // Gelir Faturası
                     $c = Islem::where('tip',ISLEM_TAHSILAT)->where('faturaId',$v['id'])->count();
-                    $type = "Gelir Faturası";
-                    $uri = route('islem.create',['type'=>ISLEM_TAHSILAT]);
+                    $type = "Tahsilat";
+                    $uri = route('islem.create',['type'=>ISLEM_TAHSILAT, 'id' => $v['id']]);
                 }
                 else
                 {
                     // Gider Faturası
                     $c = Islem::where('tip',ISLEM_ODEME)->where('faturaId',$v['id'])->count();
-                    $type = "Gider Faturası";
-                    $uri = route('islem.create',['type'=>ISLEM_ODEME]);
+                    $type = "Ödeme";
+                    $uri = route('islem.create',['type'=>ISLEM_ODEME, 'id' => $v['id']]);
                 }
 
-                if($c == 0)
+                if(Fatura::getKalanTutar($v['id']) != 0)
                 {
-                    $returnArray[$k]['name'] = $v['faturaNo']." - ".$type;
+                    $returnArray[$k]['name'] = $v['faturaNo']." - ".Musteriler::getPublicName($v['musteriId'])." - " .$type;
                     $returnArray[$k]['musteriId'] = $v['musteriId'];
-                    $returnArray[$k]['fiyat'] = Fatura::getTotal($v['id']);
+                    $returnArray[$k]['fiyat'] = number_format(Fatura::getTotal($v['id']), 2, '.', ',');
+                    $returnArray[$k]['kalanTutar'] = Fatura::getKalanTutar($v['id']);
                     $returnArray[$k]['uri'] = $uri;
                 }
 

@@ -16,7 +16,7 @@ class CreateFaturaIslemsTable extends Migration
         Schema::create('fatura_islems', function (Blueprint $table) {
             $table->id();
             $table->integer('faturaId');
-            $table->integer('kalemId');
+            $table->integer("urunId")->default(0);
             $table->integer('miktar');
             $table->double('fiyat');
             $table->integer('kdv');

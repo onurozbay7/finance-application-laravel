@@ -18,21 +18,15 @@ class Musteriler extends Model
             return $data[0]['firmaAdi'];
         }
     }
-    static function getPhoneNumber($id){
+
+    static function getPhoto($id) {
         $data = Musteriler::where('id',$id)->get();
+        if($data[0]['photo'] != ""){
+            return $data[0]['photo'];
 
-        return $data[0]['telefon'];
-    }
-
-    static function getEmail($id){
-        $data = Musteriler::where('id',$id)->get();
-
-        return $data[0]['email'];
-    }
-
-    static function getAdress($id){
-        $data = Musteriler::where('id',$id)->get();
-
-        return $data[0]['adres'];
+        }
+        else {
+            return "assets/demo/users/default-profile.png";
+        }
     }
 }

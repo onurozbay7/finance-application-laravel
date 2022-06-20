@@ -25,13 +25,17 @@
 <div id="wrapper" class="wrapper">
     <div class="row container-min-full-height">
         <div class="col-lg-8 p-3 login-left">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 30px">
+            <img src="{{ asset('assets/demo/teksoz-logo.png') }}" alt=""><p style="margin-left: 30px;">Finans Uygulaması</p>
+            </div>
             <div class="w-50">
+
                 <h2 class="mb-4 text-center">Hoşgeldiniz</h2>
                 <form method="POST" action="{{ route('login') }}" class="text-center">
                     @csrf
                     <div class="form-group">
                         <label class="text-muted" for="example-email">Email</label>
-                        <input type="email" placeholder="johndoe@site.com" class="form-control form-control-line" name="email">
+                        <input type="email" placeholder="example@gmail.com" class="form-control form-control-line" name="email">
                         @if ($errors->has('email'))
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $errors->first('email') }}</strong>
@@ -54,20 +58,12 @@
             </div>
             <!-- /.w-75 -->
         </div>
-        <div class="col-lg-4 login-right d-lg-flex d-none pos-fixed pos-right text-inverse container-min-full-height" style="background-image: url(assets/demo/login-page-bg.jpg)">
+        <div class="col-lg-4 login-right d-lg-flex d-none pos-fixed pos-right text-inverse container-min-full-height" style=" background-image: url({{ asset('assets/demo/background.jpg') }})">
             <div class="login-content px-3 w-75 text-center">
-                <h2 class="mb-4 text-center fw-300">New here?</h2>
-                <p class="heading-font-family fw-300 letter-spacing-minus">Sign up and discover the many great features that our app provides</p><a class="btn btn-rounded btn-md btn-outline-inverse text-uppercase fw-600 ripple pd-lr-60 mr-t-200">Sign Up</a>
-                <ul class="list-inline mt-4 heading-font-family text-uppercase fs-13 mr-t-20">
-                    <li class="list-inline-item"><a href="#">Home</a>
-                    </li>
-                    <li class="list-inline-item"><a href="#">About</a>
-                    </li>
-                    <li class="list-inline-item"><a href="#">Contact</a>
-                    </li>
-                    <li class="list-inline-item"><a href="#">Careers</a>
-                    </li>
-                </ul>
+                <h2 class="mb-4 text-center fw-300">Kayıt olmadınız mı?</h2>
+                <p class="heading-font-family fw-300 letter-spacing-minus">Lütfen yetkili adminden üyelik isteyiniz.</p>
+
+
             </div>
             <!-- /.login-content -->
         </div>

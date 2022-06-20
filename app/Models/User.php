@@ -54,4 +54,5 @@ class User extends Authenticatable
             return "assets/demo/users/default-profile.png";
         }
     }
+
 }
